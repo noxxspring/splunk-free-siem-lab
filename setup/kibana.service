@@ -1,0 +1,27 @@
+sudo nano /etc/systemd/system/kibana.service
+
+then add these:
+
+[Unit]
+Description=Kibana 7.10.2
+After=network.target
+
+[Service]
+Type=simple
+User=your-username
+Group=your-username
+WorkingDirectory=/opt/kibana
+ExecStart=/opt/kibana/bin/kibana
+Restart=always
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
+
+then
+
+sudo systemctl daemon-reload
+sudo systemctl enable kibana
+sudo systemctl start kibana
+  
+

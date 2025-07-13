@@ -1,0 +1,11 @@
+# Bind to local interface for security (localhost only)
+network.host: 127.0.0.1
+
+# Port for Elasticsearch API (used by Filebeat, Kibana)
+http.port: 9200
+
+# Prevent Elasticsearch from swapping memory to disk
+bootstrap.memory_lock: true
+
+# Optional safety to avoid accidental destructive index deletion
+action.destructive_requires_name: true

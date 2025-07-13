@@ -1,0 +1,8 @@
+# Bind only to localhost (secured local access)
+server.host: "127.0.0.1"
+
+# Bind to port
+server.port: "5601"
+
+# Elasticsearch URL (connects Kibana to your Elasticsearch node)
+elasticsearch.hosts: ["http://localhost:9200"]
