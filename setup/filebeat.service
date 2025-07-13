@@ -1,0 +1,16 @@
+[Unit]
+Description=Filebeat (Custom Install)
+After=network.target
+
+[Service]
+Type=simple
+User=your-username
+Group=your-username
+ExecStart=/opt/filebeat/filebeat -e -c /opt/filebeat/filebeat.yml
+Restart=always
+LimitNPROC=infinity
+LimitNOFILE=65535
+LimitSTACK=65535
+
+[Install]
+WantedBy=multi-user.target

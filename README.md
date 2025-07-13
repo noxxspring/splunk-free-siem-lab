@@ -51,12 +51,47 @@ sudo chown -R $USER:$USER /opt/kibana
 - sudo nano /opt/kibana/config/kibana.yml
 
 #### then add these
-- server.host: "127.0.0.1"
-- server.port: 5601
-- elasticsearch.hosts: ["http://localhost:9200"]
+```yaml
+server.host: "127.0.0.1"
+server.port: 5601
+elasticsearch.hosts: ["http://localhost:9200"]
+```
 
 Then create a systemd service for the kibanato keep it actively runnng
 
 #### Open Kibana Web UI
 - http://localhost:5061
 
+
+
+# Filebeat Setup (v7.10.2- Manual Install)
+
+## Install
+
+```bash
+cd /opt
+sudo curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.10.2-linux-x86_64.tar.gz
+sudo tar -xzf filebeat-7.10.2-linux-x86_64.tar.gz
+sudo mv filebeat-7.10.2-linux-x86_64 filebeat
+sudo chown -R $USER:$USER /opt/filebeat
+```
+### configure
+```yaml
+filebeat.inputs:
+- type: filestream
+  id: system-logs
+  enabled: true
+  paths:
+    - /var/log/*.log
+
+output.elasticsearch:
+  hosts: ["http://localhost:9200"]
+
+setup.kibana:
+  host: "localhost:5601"
+```
+# Create Filebeat systemd Service
+
+- sudo systemctl daemon-reload
+- sudo systemctl enable filebeat
+- sudo systemctl start filebeat
