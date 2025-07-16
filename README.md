@@ -202,6 +202,78 @@ The filebeat is configured to harvest logs from /var/log/**/*.log which points f
 #### Search for: docker-ssh-auth.log, "Failed password", "Accepted password"
 
 
+#   Security Hardening & Kibana User Setup
+
+### Step 1: Enable Security in Elasticsearch
+
+- Edit the Elasticsearch config file
+```bash
+sudo nano /etc/elasticsearch/elasticsearch.yml```
+
+- Add the following lines to enable authentication:
+
+```yaml
+xpack.security.enabled: true
+xpack.security.authc.api_key.enabled: true
+xpack.security.authc.realms.native.native1.order: 0
+```
+
+### step 2: Restart the Stack
+
+- Restart Elasticsearch and Kibana to apply changes
+```bash
+sudo systemctl restart elasticsearch
+sudo systemctl restart kibana
+```
+### step 3: Set Elasticsearch Built-in Passwords
+
+- Run the following to set passwords for system accounts:
+```bash
+sudo /usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive
+```
+-Note: you will be prompted to set password for elastic, kibana_system, logstash_system, beats_system
+
+### step 4: Configure Kibana
+
+- Edit Kibana's config file
+```bash
+sudo nano /opt/kibana/config/kibana.yml
+```
+- Add 
+```yaml
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "YourKibanaSystemPassword"
+```
+### step 5: Restart kibana
+```bash
+sudo systemctl restart kibana
+```
+### step 6: Login to kibana
+- Login to your kibana or refresh the page, then login with: username = elastic and password = the password you set
+
+### step 7: Create proper kibana user
+
+-After logging in as elastic, create a proper real UI user. GO TO:
+```
+Kibana --> Stack Management ---> Security ---> Users ----> Create User
+then fill in the fields
+username, password, fullname, email, role(Kibana_admin or superuser)
+```
+
+### Optional you can use the CLI to create the user
+```bash
+curl -X POST -u elastic:YourElasticPassword "http://localhost:9200/_security/user/noxx" -H "Content-Type: application/json" -d'
+{
+  "password" : "YourPassword",
+  "roles" : [ "superuser" ],
+  "full_name" : "Noxx User",
+  "email" : "noxx@example.com"
+}'
+```
+### step 8: Test Login
+Logout as elastic and login as the new user
+
+
 
 
 
